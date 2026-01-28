@@ -1,0 +1,148 @@
+// LoanServiceImpl.java
+package com.berkaykomur.service.impl;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.berkaykomur.dto.DtoBook;
+import com.berkaykomur.dto.DtoLoan;
+import com.berkaykomur.dto.DtoMember;
+import com.berkaykomur.dto.LoanRequest;
+import com.berkaykomur.exception.BaseException;
+import com.berkaykomur.exception.ErrorMessage;
+import com.berkaykomur.exception.MessagesType;
+import com.berkaykomur.model.Book;
+import com.berkaykomur.model.Loan;
+import com.berkaykomur.model.Member;
+import com.berkaykomur.repository.BookRepository;
+import com.berkaykomur.repository.LoanRepository;
+import com.berkaykomur.repository.MemberRepository;
+import com.berkaykomur.service.ILoanService;
+
+@Service
+public class LoanServiceImpl implements ILoanService {
+
+    @Autowired
+    private BookRepository bookRepository;
+    
+    @Autowired
+    private MemberRepository memberRepository;
+    
+    @Autowired
+    private LoanRepository loanRepository;
+    
+    @Override
+    public DtoLoan loanBook(LoanRequest request) {
+        Book book = bookRepository.findById(request.getBookId())
+            .orElseThrow(() -> new BaseException(
+                new ErrorMessage(MessagesType.NO_RECORD_EXIST, 
+                "Kitap bulunamadı: " + request.getBookId())));
+
+        if (!book.isAvailable()) {
+            throw new BaseException(
+                new ErrorMessage(MessagesType.ALREADY_LOANED, 
+                "Bu kitap zaten ödünç alınmış"));
+        }
+
+        Member member = memberRepository.findById(request.getMemberId())
+            .orElseThrow(() -> new BaseException(
+                new ErrorMessage(MessagesType.NO_RECORD_EXIST,
+                "Üye bulunamadı: " + request.getMemberId())));
+
+        book.setAvailable(false);
+        bookRepository.save(book);
+
+        Loan loan = new Loan();
+        loan.setBook(book);
+        loan.setMember(member);
+        loan.setLoanDetails(); // Otomatik tarih ataması yapar
+        
+        Loan savedLoan = loanRepository.save(loan);
+
+        DtoLoan dtoLoan = new DtoLoan();
+        BeanUtils.copyProperties(savedLoan, dtoLoan);
+        
+        DtoBook dtoBook = new DtoBook();
+        BeanUtils.copyProperties(book, dtoBook);
+        dtoLoan.setBook(dtoBook);
+        
+        DtoMember dtoMember = new DtoMember();
+        BeanUtils.copyProperties(member, dtoMember);
+        dtoLoan.setMember(dtoMember);
+
+        return dtoLoan;
+    }
+    @Override
+    public List<DtoLoan> getLoansByMemberId(Long memberId) {
+        List<Loan> loans = loanRepository.findByMemberId(memberId);
+        return loans.stream().map(loan -> {
+            DtoLoan dtoLoan = new DtoLoan();
+            BeanUtils.copyProperties(loan, dtoLoan);
+            
+            DtoBook dtoBook = new DtoBook();
+            BeanUtils.copyProperties(loan.getBook(), dtoBook);
+            dtoLoan.setBook(dtoBook);
+            
+            return dtoLoan;
+        }).collect(Collectors.toList());
+    }
+ // LoanServiceImpl.java'ya bu metodu ekleyin
+    @Override
+    public DtoLoan returnBook(Long loanId) {
+        Loan loan = loanRepository.findById(loanId)
+            .orElseThrow(() -> new BaseException(
+                new ErrorMessage(MessagesType.NO_RECORD_EXIST, 
+                "Ödünç kaydı bulunamadı: " + loanId)));
+
+        Book book = loan.getBook();
+        book.setAvailable(true);
+        bookRepository.save(book);
+
+        loan.setReturnDate(LocalDate.now());
+        Loan updatedLoan = loanRepository.save(loan);
+
+        DtoLoan dtoLoan = new DtoLoan();
+        BeanUtils.copyProperties(updatedLoan, dtoLoan);
+        
+        DtoBook dtoBook = new DtoBook();
+        BeanUtils.copyProperties(book, dtoBook);
+        dtoLoan.setBook(dtoBook);
+        
+        DtoMember dtoMember = new DtoMember();
+        BeanUtils.copyProperties(loan.getMember(), dtoMember);
+        dtoLoan.setMember(dtoMember);
+
+        return dtoLoan;
+    }
+    @Override
+    public boolean isLoanBelongsToMember(Long loanId, Long memberId) {
+        Loan loan = loanRepository.findById(loanId)
+            .orElseThrow(() -> new BaseException(
+                new ErrorMessage(MessagesType.NO_RECORD_EXIST, 
+                "Ödünç kaydı bulunamadı: " + loanId)));
+        
+        return loan.getMember().getId().equals(memberId);
+    }
+    @Override
+    public List<DtoLoan> getAllLoans() {
+        List<Loan> loans = loanRepository.findAll();
+        return loans.stream().map(loan -> {
+            DtoLoan dtoLoan = new DtoLoan();
+            BeanUtils.copyProperties(loan, dtoLoan);
+            
+            DtoBook dtoBook = new DtoBook();
+            BeanUtils.copyProperties(loan.getBook(), dtoBook);
+            dtoLoan.setBook(dtoBook);
+            
+            DtoMember dtoMember = new DtoMember();
+            BeanUtils.copyProperties(loan.getMember(), dtoMember);
+            dtoLoan.setMember(dtoMember);
+            
+            return dtoLoan;
+        }).collect(Collectors.toList());
+    }
+}

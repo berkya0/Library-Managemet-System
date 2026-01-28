@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>📚Kitaphanem</title>
+</head>
+<body>
+<div class="container">
+    <h2>📚Kitaphanem</h2>
+    <button id="logoutBtn" class="btn-logout">Çıkış Yap</button>
+
+    <!-- Sekmeler -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="profile">Profilim</button>
+        <button class="tab-btn" data-tab="books">Kitaplar</button>
+        <button class="tab-btn" data-tab="members">Üyeler</button>
+        <button class="tab-btn" data-tab="all-loans">Alınan Kitaplar</button>
+    </div>
+
+    <!-- Profil Bilgileri -->
+	<div id="profile-tab" class="tab-content active">
+	    <div class="profile-card">
+	        <div style="display: flex; justify-content: space-between; align-items: center;">
+	            <h3>Profil Bilgilerim</h3>
+	            <button id="editProfileBtn" class="btn-edit">Profili Düzenle</button>
+	        </div>
+	        <div id="profileInfo"></div>
+	    </div>
+
+	    <h3>Ödünç Aldığım Kitaplar</h3>
+	    
+	    <!-- Arama Bölümü -->
+	    <div class="books-search-section">
+	        <div class="search-filters">
+	            <div class="search-container">
+	                <input type="text" id="myLoansSearch" placeholder="      Kitap veya yazar ara...">
+	                <span class="search-icon">🔍</span>
+	            </div>
+	        </div>
+	    </div>
+	    
+	    <table id="myLoansTable">
+	        <thead>
+	            <tr>
+	                <th>Kitap Adı</th>
+	                <th>Yazar</th>
+	                <th>Alınma Tarihi</th>
+	                <th>Son Teslim Tarihi</th>
+	                <th>İşlem</th>
+	            </tr>
+	        </thead>
+	        <tbody></tbody>
+	    </table>
+	</div>
+
+    <!-- Kitap Yönetimi -->
+	<div id="books-tab" class="tab-content">
+	    <div class="add-book-form">
+	        <h3>Yeni Kitap Ekle</h3>
+	        <form id="addBookForm">
+	            <input type="text" id="bookTitle" placeholder="Kitap Adı" required>
+	            <input type="text" id="bookAuthor" placeholder="Yazar" required>
+	            <select id="bookCategory">
+	                <option value="ROMAN">Roman</option>
+	                <option value="BİLİM">Bilim</option>
+	                <option value="FANTASTİK">Fantastik</option>
+	                <option value="TARİH">Tarih</option>
+	                <option value="BİYOGRAFİ">Biyografi</option>
+	                <option value="KOMEDİ">Komedi</option>
+	            </select>
+	            <input type="text" id="bookIsbn" placeholder="ISBN No" required>
+	            <button type="submit">Kitap Ekle</button>
+	        </form>
+	    </div>
+
+	    <h3>Kitap Listesi</h3>
+	    
+	    <div class="books-search-section">
+	        <div class="search-filters">
+	            <div class="search-container">
+	                <input type="text" id="bookSearch" placeholder="Kitap veya yazar adı ara...">
+	                <span class="search-icon">🔍</span>
+	            </div>
+	            <select id="searchCategory">
+	                <option value="">Tüm Kategoriler</option>
+	                <option value="ROMAN">Roman</option>
+	                <option value="BİLİM">Bilim</option>
+	                <option value="FANTASTİK">Fantastik</option>
+	                <option value="TARİH">Tarih</option>
+	                <option value="BİYOGRAFİ">Biyografi</option>
+	                <option value="KOMEDİ">Komedi</option>
+	            </select>
+	        </div>
+	    </div>
+	    
+	    <table id="bookTable">
+	        <thead>
+	            <tr>
+	                <th>ID</th>
+	                <th>Başlık</th>
+	                <th>Yazar</th>
+	                <th>Kategori</th>
+	                <th>ISBN</th>
+	                <th>Mevcut</th>
+	                <th>İşlemler</th>
+	            </tr>
+	        </thead>
+	        <tbody></tbody>
+	    </table>
+	</div>
+
+    <!-- Üye Yönetimi -->
+	<div id="members-tab" class="tab-content">
+	    <h3>Üye Listesi</h3>
+	    
+	    <!-- Arama ve Filtreleme Bölümü -->
+		<div class="members-search-section">
+		    <div class="search-filters">
+		        <div class="search-container">
+		            <input type="text" id="memberSearch" placeholder="Üye adı, email veya telefon ara...">
+		            <span class="search-icon">🔍</span>
+		        </div>
+		        <select id="filterRole">
+		            <option value="">Tüm Roller</option>
+		            <option value="ADMIN">Admin</option>
+		        </select>
+		    </div>
+		</div>
+	    
+	    <table id="memberTable">
+	        <thead>
+	            <tr>
+	                <th>ID</th>
+	                <th>Ad Soyad</th>
+	                <th>Email</th>
+	                <th>Telefon</th>
+	                <th>Kullanıcı Adı</th>
+	                <th>Rol</th>
+	                <th>İşlem</th>
+	            </tr>
+	        </thead>
+	        <tbody></tbody>
+	    </table>
+	</div>
+    <!-- Tüm Ödünçler Sekmesi -->
+	<div id="all-loans-tab" class="tab-content">
+	    <h3>Tüm Ödünç Alınan Kitaplar</h3>
+	    
+	    <!-- Arama ve Filtreleme Bölümü -->
+	    <div class="loans-search-section">
+	        <div class="search-filters">
+	            <div class="search-container">
+	                <input type="text" id="loanSearch" placeholder="Üye, kitap veya yazar ara...">
+	                <span class="search-icon">🔍</span>
+	            </div>
+	            <select id="filterStatus">
+	                <option value="">Tüm Durumlar</option>
+	                <option value="İade Edildi">İade Edildi</option>
+	                <option value="Ödünç Alındı">Ödünç Alındı</option>
+	            </select>
+	        </div>
+	    </div>
+	    
+	    <table id="allLoansTable">
+	        <thead>
+	            <tr>
+	                <th>Üye Adı</th>
+	                <th>Kitap Adı</th>
+	                <th>Yazar</th>
+	                <th>Alınma Tarihi</th>
+	                <th>Son Teslim Tarihi</th>
+	                <th>İade Tarihi</th>
+	                <th>Durum</th>
+	            </tr>
+	        </thead>
+	        <tbody></tbody>
+	    </table>
+	</div>
+</div>
+<script src="/js/dashboard.js"></script>
+</body>
+</html>
