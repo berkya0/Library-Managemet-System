@@ -2,10 +2,7 @@ package com.berkaykomur.model;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,21 +16,23 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Loan extends BaseEntity {
- 
- @ManyToOne
- @JoinColumn(name = "book_id", nullable = false)  // Foreign key açıkça belirtiliyor
- private Book book;
- 
- @ManyToOne
- @JoinColumn(name = "member_id", nullable = false)  // Foreign key açıkça belirtiliyor
- private Member member;
- 
- private LocalDate loanDate;
- private LocalDate returnDate;
- private LocalDate dueDate;
- 
- public void setLoanDetails() {
-     this.loanDate = LocalDate.now();
-     this.dueDate = LocalDate.now().plusDays(14);
- }
+
+    @ManyToOne
+    @JoinColumn(name = "book_id", nullable = false)  // Foreign key açıkça belirtiliyor
+    private Book book;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)  // Foreign key açıkça belirtiliyor
+    private Member member;
+    @Column(nullable = false)
+    private LocalDate loanDate;
+
+    private LocalDate returnDate;
+    @Column(nullable = false)
+    private LocalDate dueDate;
+
+    public void setLoanDetails() {
+        this.loanDate = LocalDate.now();
+        this.dueDate = LocalDate.now().plusDays(14);
+    }
 }
