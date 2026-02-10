@@ -13,7 +13,7 @@ import lombok.Setter;
 public class DtoRefreshToken extends DtoBase {
     private String refreshToken;
     private Date expiredDate;
-    private Long userId; // User referansı için
+    private Long userId;
    
 	private Date createTime;
 }

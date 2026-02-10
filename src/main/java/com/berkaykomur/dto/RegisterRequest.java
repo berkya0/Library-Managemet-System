@@ -9,13 +9,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RegisterRequest {
-	//kullanıcı bilgileri
+
 		@NotBlank
 		private String username;
 		@NotBlank
 		private String password;
-		
-		//member bilgileri
+
 		@NotBlank
 		private String fullName;
 		

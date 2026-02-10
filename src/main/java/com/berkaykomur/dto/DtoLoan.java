@@ -13,5 +13,5 @@ public class DtoLoan extends DtoBase {
     private LocalDate loanDate;
     private LocalDate returnDate;
     private LocalDate dueDate;
-    private boolean active; // Yeni eklendi
+    private boolean active;
 }

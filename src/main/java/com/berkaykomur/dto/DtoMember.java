@@ -14,5 +14,5 @@ public class DtoMember extends DtoBase {
     private String phoneNumber;
     private Date membershipDate;
     private DtoUser user;
-    private List<DtoLoan> loans; // Yeni eklendi
+    private List<DtoLoan> loans;
 }

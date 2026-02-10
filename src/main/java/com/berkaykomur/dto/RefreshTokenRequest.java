@@ -19,6 +19,4 @@ public class RefreshTokenRequest {
 
 	@NotEmpty
 	private String refreshToken;
-	@DateTimeFormat(iso = ISO.DATE_TIME)
-	private Date createTime;
 }

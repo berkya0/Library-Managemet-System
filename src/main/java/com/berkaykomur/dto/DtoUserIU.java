@@ -16,7 +16,5 @@ public class DtoUserIU {
 	private String password;
 	private Role role;
 	private DtoMember member;
-	private Date createTime;
-	
 
 }

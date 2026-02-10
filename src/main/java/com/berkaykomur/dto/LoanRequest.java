@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 public class LoanRequest {
     @NotNull(message = "Kitap ID boş olamaz")
-    private Long bookId; // long -> Long olarak değiştirildi
+    private Long bookId;
     
     @NotNull(message = "Üye ID boş olamaz")
-    private Long memberId; // long -> Long olarak değiştirildi
+    private Long memberId;
 }
