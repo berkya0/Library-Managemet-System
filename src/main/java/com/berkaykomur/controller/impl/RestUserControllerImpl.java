@@ -29,7 +29,6 @@ public class RestUserControllerImpl extends RestBaseController implements IRestU
 	public RootEntity<DtoUser> updateUser(@Valid @RequestBody DtoUserIU dtoUserIU) {
 		return ok(userService.updateUser(dtoUserIU));
 	}
-	// RestUserControllerImpl.java
 	@DeleteMapping("/delete/{id}")
 	@PreAuthorize("hasRole('ADMIN') or @userSecurityService.isOwner(authentication, #id)")
 	public RootEntity<Void> deleteUser(@PathVariable(value = "id") Long id) {

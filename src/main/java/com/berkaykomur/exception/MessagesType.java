@@ -13,7 +13,8 @@ public enum MessagesType {
 	REFRESH_TOKEN_IS_EXPIRED("1009","Refresh tokenin süresi dolmuş"),
 	GENERAL_EXCEPTION("1011","Genel bir hata oluştu"),
 	UNAUTHORIZED_ACTIO("1012","Bunu yapmaya yetkin yok!"),
-	ALREADY_LOANED("1013","Bu kitap başkası tarafından zaten ödünç alınmış");
+	ALREADY_LOANED("1013","Bu kitap başkası tarafından zaten ödünç alınmış"),
+    USERNAME_ALREADY_TAKEN("1025","Kullanıcı adı alınmış");
 	
 	private String code;
 	private String errorMessage;

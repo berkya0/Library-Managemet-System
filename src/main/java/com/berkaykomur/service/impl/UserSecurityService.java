@@ -11,7 +11,6 @@ public class UserSecurityService {
 
     @Autowired
     private MemberRepository memberRepository;
-
     public boolean isOwner(Authentication authentication, Long memberId) {
         if (authentication == null || memberId == null) {
             return false;

@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ApiError<T> {
 	
-	private Integer status;//404 falan hata kodları için
+	private Integer status;
 	
 	private ExceptionDetails<T> exceptionDetails;
 	

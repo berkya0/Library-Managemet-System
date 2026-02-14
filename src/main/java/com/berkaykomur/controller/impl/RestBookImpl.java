@@ -39,13 +39,13 @@ public class RestBookImpl extends RestBaseController implements IRestBookControl
 	}
 	 @Override
 	    @DeleteMapping("/delete/{id}")
-	    @PreAuthorize("hasRole('ADMIN')") // Sadece adminler silebilir
+	    @PreAuthorize("hasRole('ADMIN')")
 	    public RootEntity<Void> deleteBook(@PathVariable(name = "id") Long id) {
 	        bookService.deleteBook(id);
 	        return ok(); 
 	    }
 	@PostMapping("/save")
-	@PreAuthorize("hasRole('ADMIN')") // Sadece adminler kitap ekleyebilir
+	@PreAuthorize("hasRole('ADMIN')")
 	public RootEntity<DtoBook> saveBook(@Valid @RequestBody DtoBookIU dtoBookIU) {
 	    return ok(bookService.saveBook(dtoBookIU));
 	}

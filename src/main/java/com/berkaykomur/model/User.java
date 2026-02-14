@@ -40,10 +40,10 @@ public class User extends BaseEntity implements UserDetails {
     private Date createTime;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Member member;  // orphanRemoval eklendi
+    private Member member;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RefreshToken> refreshTokens; // RefreshToken ilişkisi eklendi
+    private List<RefreshToken> refreshTokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

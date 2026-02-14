@@ -37,35 +37,25 @@ public class RestLoanControllerImpl extends RestBaseController implements IRestL
     private IMemberService memberService;
     @Override
     @PostMapping("/borrow")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public RootEntity<DtoLoan> loanBook(@Valid @RequestBody LoanRequest request) {
-        // Mevcut kullanıcının memberId'si ile request'teki memberId'yi karşılaştır
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();     
         return ok(loanService.loanBook(request));
     }
     @Override
     @GetMapping("/my-loans")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public RootEntity<List<DtoLoan>> getMyLoans() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        
-        // Örnek: MemberService üzerinden username'e göre memberId bulunabilir
         Long memberId = memberService.findMemberIdByUsername(username);
         
         return ok(loanService.getLoansByMemberId(memberId));
     }
     @Override
     @PostMapping("/return/{loanId}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public RootEntity<DtoLoan> returnBook(@PathVariable Long loanId) {
-        // İade işlemini yapan kullanıcının bu ödünç kaydına ait olup olmadığını kontrol et
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         Long memberId = memberService.findMemberIdByUsername(username);
-        
-        // Ödünç kaydının bu kullanıcıya ait olduğunu doğrula
+
         if (!loanService.isLoanBelongsToMember(loanId, memberId)) {
             throw new BaseException(
                 new ErrorMessage(MessagesType.UNAUTHORIZED_ACTIO, 

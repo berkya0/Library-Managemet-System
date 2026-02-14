@@ -54,7 +54,6 @@ public class UserServiceImpl implements IUserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessagesType.NO_RECORD_EXIST, id.toString())));
 
-        // Yetki kontrolü
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         boolean isAdmin = isAdmin();
 
@@ -62,7 +61,6 @@ public class UserServiceImpl implements IUserService {
             throw new BaseException(new ErrorMessage(MessagesType.UNAUTHORIZED_ACTIO, "Bu işlem için yetkiniz yok"));
         }
 
-        // Aktif ödünç alma kontrolü
         if (user.getMember() != null) {
             boolean hasActiveLoans = user.getMember().getLoans().stream()
                     .anyMatch(loan -> loan.getReturnDate() == null);
@@ -71,12 +69,8 @@ public class UserServiceImpl implements IUserService {
                 throw new BaseException(new ErrorMessage(MessagesType.GENERAL_EXCEPTION,
                         "Ödünç alınmış kitapları olan kullanıcı silinemez. Önce kitapları iade etmelisiniz."));
             }
-
-            // İlişkili member'ı sil
             memberRepository.delete(user.getMember());
         }
-
-        // Kullanıcıyı sil (member silindikten sonra)
         userRepository.delete(user);
     }
     private DtoUser convertToDto(User user) {

@@ -18,11 +18,11 @@ import lombok.Setter;
 public class Loan extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "book_id", nullable = false)  // Foreign key açıkça belirtiliyor
+    @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
     @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)  // Foreign key açıkça belirtiliyor
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
     @Column(nullable = false)
     private LocalDate loanDate;

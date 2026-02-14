@@ -23,59 +23,58 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class BookServiceImpl implements IBookService{
-	@Autowired
-	private BookRepository bookRepository;
-	@Override
-	public List<DtoBook> findAllBooks() {
-		List<Book> allBook = bookRepository.findAll();
-		List<DtoBook> dtoList=new ArrayList<>();
-		for (Book book : allBook) {
-			DtoBook dtoBook=new DtoBook();
-			BeanUtils.copyProperties(book, dtoBook);
-			dtoList.add(dtoBook);
-		}
-		return dtoList;
-	}
-	@Override
-	public DtoBook findBookById(Long id) {
-		Optional<Book> optional = bookRepository.findById(id);
-		if(optional.isEmpty()) {
-			throw new BaseException(new ErrorMessage(MessagesType.NO_RECORD_EXIST,id.toString()));
-		}
-		DtoBook dtoBook=new DtoBook();
-		BeanUtils.copyProperties(optional.get(), dtoBook);
-		return dtoBook;
-	}
-	
-	@Override
-	public DtoBook saveBook(DtoBookIU dtoBookIU) {
-	    Book book = new Book();
-	    book.setTitle(dtoBookIU.getTitle());
-	    book.setAuthor(dtoBookIU.getAuthor());
-	    book.setCategory(dtoBookIU.getCategory()); // Enum doğrudan atanıyor
-	    book.setIsbnNo(dtoBookIU.getIsbnNo());
-	    book.setAvailable(true); // Yeni kitaplar her zaman available
-	    book = bookRepository.save(book);
-	    DtoBook dtoBook = new DtoBook();
-	    BeanUtils.copyProperties(book, dtoBook);
-	    return dtoBook;
-	}
-	@Autowired
-	private LoanRepository loanRepository;
-	
-	@Override
+    @Autowired
+    private BookRepository bookRepository;
+    @Override
+    public List<DtoBook> findAllBooks() {
+        List<Book> allBook = bookRepository.findAll();
+        List<DtoBook> dtoList=new ArrayList<>();
+        for (Book book : allBook) {
+            DtoBook dtoBook=new DtoBook();
+            BeanUtils.copyProperties(book, dtoBook);
+            dtoList.add(dtoBook);
+        }
+        return dtoList;
+    }
+    @Override
+    public DtoBook findBookById(Long id) {
+        Optional<Book> optional = bookRepository.findById(id);
+        if(optional.isEmpty()) {
+            throw new BaseException(new ErrorMessage(MessagesType.NO_RECORD_EXIST,id.toString()));
+        }
+        DtoBook dtoBook=new DtoBook();
+        BeanUtils.copyProperties(optional.get(), dtoBook);
+        return dtoBook;
+    }
+
+    @Override
+    public DtoBook saveBook(DtoBookIU dtoBookIU) {
+        Book book = new Book();
+        book.setTitle(dtoBookIU.getTitle());
+        book.setAuthor(dtoBookIU.getAuthor());
+        book.setCategory(dtoBookIU.getCategory());
+        book.setIsbnNo(dtoBookIU.getIsbnNo());
+        book.setAvailable(true);
+        book = bookRepository.save(book);
+        DtoBook dtoBook = new DtoBook();
+        BeanUtils.copyProperties(book, dtoBook);
+        return dtoBook;
+    }
+    @Autowired
+    private LoanRepository loanRepository;
+
+    @Override
     @PreAuthorize("hasRole('ADMIN')")
-	@Transactional
-	public void deleteBook(Long id) {
-	    Book book = bookRepository.findById(id)
-	        .orElseThrow(() -> new BaseException(new ErrorMessage(MessagesType.NO_RECORD_EXIST, id.toString())));
-	    // Kitabın ödünç alınıp alınmadığını kontrol et
-	    if (!book.isAvailable()) {
-	        throw new BaseException(new ErrorMessage(MessagesType.GENERAL_EXCEPTION, 
-	            "Ödünç alınmış kitap silinemez. Önce kitabın iade edilmesi gerekir."));
-	    }
-	    loanRepository.deleteByBookId(id);
-	    bookRepository.delete(book);
-	}
+    @Transactional
+    public void deleteBook(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessagesType.NO_RECORD_EXIST, id.toString())));
+        if (!book.isAvailable()) {
+            throw new BaseException(new ErrorMessage(MessagesType.GENERAL_EXCEPTION,
+                    "Ödünç alınmış kitap silinemez. Önce kitabın iade edilmesi gerekir."));
+        }
+        loanRepository.deleteByBookId(id);
+        bookRepository.delete(book);
+    }
 
 }

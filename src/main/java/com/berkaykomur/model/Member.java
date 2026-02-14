@@ -29,7 +29,7 @@ public class Member extends BaseEntity {
     private String email;
     @Column(nullable = false,unique = true)
     private String phoneNumber;
- 
+
     @Temporal(TemporalType.TIMESTAMP)
      private Date membershipDate = new Date();
  
@@ -37,7 +37,6 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    // Loan ile ilişki (CascadeType.ALL ve orphanRemoval ekleniyor)
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Loan> loans;
 }

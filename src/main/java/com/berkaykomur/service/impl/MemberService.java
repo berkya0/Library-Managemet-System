@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.berkaykomur.dto.DtoMember;
@@ -20,16 +20,14 @@ import com.berkaykomur.model.User;
 import com.berkaykomur.repository.MemberRepository;
 import com.berkaykomur.repository.UserRepository;
 import com.berkaykomur.service.IMemberService;
-
-// ... imports ...
-
 @Service
 public class MemberService implements IMemberService {
 
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
-    private UserRepository userRepository; // Yeni eklendi
+    private UserRepository userRepository;
+
     @Override
     public DtoMember findMemberById(Long id) {
         Member member = memberRepository.findById(id)
@@ -38,11 +36,10 @@ public class MemberService implements IMemberService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN') or @userSecurityService.isOwner(authentication, #id)")
     public DtoMember updateMemberById(Long id, DtoMemberIU dtoMemberIU) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessagesType. NO_RECORD_EXIST,id.toString())));
-
-        checkAuthorization(member);
 
         member.setFullName(dtoMemberIU.getFullName());
         member.setEmail(dtoMemberIU.getEmail());
@@ -59,7 +56,7 @@ public class MemberService implements IMemberService {
     }
     @Override
     public DtoMember findMemberByUsername(String username) {
-        // Önce User'ı bulup onun Member'ını alıyoruz
+
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessagesType. NO_RECORD_EXIST,username)));
 
@@ -69,7 +66,6 @@ public class MemberService implements IMemberService {
 
         return convertToDto(user.getMember());
     }
-
     private DtoMember convertToDto(Member member) {
         DtoMember dto = new DtoMember();
         BeanUtils.copyProperties(member, dto);
@@ -79,32 +75,18 @@ public class MemberService implements IMemberService {
             BeanUtils.copyProperties(member.getUser(), userDto);
             dto.setUser(userDto);
         }
-
         return dto;
     }
 
-    private void checkAuthorization(Member member) {
-        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        boolean isOwner = member.getUser().getUsername().equals(currentUsername);
-        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
-                .getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
-        if (!isOwner && !isAdmin) {
-            throw new BaseException(new ErrorMessage(MessagesType.UNAUTHORIZED_ACTIO,"Bu işlem için yetkiniz yok"));
-        }
-    }
     @Override
     public DtoMember updateMemberRole(Long id, Role newRole) {
-        // Kullanıcıyı bul
+  
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessagesType.NO_RECORD_EXIST, id.toString())));
 
-        // Rolü güncelle
         user.setRole(newRole);
         userRepository.save(user);
 
-        // Member bilgilerini döndür
         if (user.getMember() == null) {
             throw new BaseException(new ErrorMessage(MessagesType.NO_RECORD_EXIST, "Kullanıcıya ait member bilgisi bulunamadı"));
         }

@@ -28,10 +28,8 @@ public class LoanServiceImpl implements ILoanService {
 
     @Autowired
     private BookRepository bookRepository;
-    
     @Autowired
     private MemberRepository memberRepository;
-    
     @Autowired
     private LoanRepository loanRepository;
     
@@ -59,7 +57,7 @@ public class LoanServiceImpl implements ILoanService {
         Loan loan = new Loan();
         loan.setBook(book);
         loan.setMember(member);
-        loan.setLoanDetails(); // Otomatik tarih ataması yapar
+        loan.setLoanDetails();
         
         Loan savedLoan = loanRepository.save(loan);
 
@@ -90,7 +88,7 @@ public class LoanServiceImpl implements ILoanService {
             return dtoLoan;
         }).collect(Collectors.toList());
     }
- // LoanServiceImpl.java'ya bu metodu ekleyin
+
     @Override
     public DtoLoan returnBook(Long loanId) {
         Loan loan = loanRepository.findById(loanId)
