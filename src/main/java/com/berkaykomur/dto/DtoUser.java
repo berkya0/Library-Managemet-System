@@ -16,6 +16,6 @@ import lombok.Setter;
 public class DtoUser extends DtoBase {
     private String username;
     private Role role;
-    private List<DtoRefreshToken> refreshTokens;
+
 	private Date createTime;
 }
