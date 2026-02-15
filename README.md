@@ -106,7 +106,7 @@ Security is configured using:
 
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/berkya0/library.git
+git clone https://github.com/berkya0/Library-Management-System.git
 ```
 2️⃣ Configure Database
 Update application.properties:
@@ -188,3 +188,4 @@ Planned enhancements:
 
 **Berkay Kömür**  
 Computer Engineering Student | Java & Spring Boot Enthusiast 🚀
+
