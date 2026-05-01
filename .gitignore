@@ -31,5 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-# Gizlemek istediğimiz dosya
-**/src/main/resources/application.properties
