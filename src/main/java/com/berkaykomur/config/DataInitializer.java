@@ -73,8 +73,8 @@ public class DataInitializer implements CommandLineRunner {
             book2.setCategory(Category.ROMAN);
 
             Book book3 = new Book();
-            book3.setTitle("Kuru Fasulyenin Faydaları");
-            book3.setAuthor("Yeşil Fasulye");
+            book3.setTitle("Kürk Mantolu Madonna");
+            book3.setAuthor("Sabahattin Ali");
             book3.setIsbnNo("9786053320138");
             book3.setAvailable(true);
             book3.setActive(true);
@@ -89,8 +89,8 @@ public class DataInitializer implements CommandLineRunner {
             book4.setCategory(Category.BİYOGRAFİ);
 
             Book book5 = new Book();
-            book5.setTitle("Ketçap Olmak");
-            book5.setAuthor("Tatlı Domatesler");
+            book5.setTitle("Pinokyo");
+            book5.setAuthor("Jhon Carl");
             book5.setIsbnNo("9786053320543");
             book5.setAvailable(true);
             book5.setActive(true);
